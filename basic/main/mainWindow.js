@@ -18,6 +18,7 @@ async function createWindow() {
       contextIsolation: true,
       sandbox: false,
       webviewTag: false,
+      webSecurity: false, // 播放本地音频需要关闭同源
       preload: join(app.getAppPath(), 'dist/preload.cjs'),
     },
   });

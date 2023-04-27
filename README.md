@@ -29,3 +29,7 @@ reg query HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\S
 
 ## 安装包体积优化
 https://blog.csdn.net/qq_42208826/article/details/107359532
+
+## 鸣谢
+
+* [audiomotion-analyzer](https://www.npmjs.com/package/audiomotion-analyzer): 实时音频频谱分析

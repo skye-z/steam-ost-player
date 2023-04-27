@@ -23,10 +23,10 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION;
     <reactive-steam />
   </fieldset>
 
-  <fieldset>
+  <!-- <fieldset>
     <legend>环境信息</legend>
     <electron-versions />
-  </fieldset>
+  </fieldset> -->
 </template>
 
 <style>

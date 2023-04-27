@@ -7,7 +7,9 @@ const db = new sqlite3.Database(path);
 console.log('database path: ' + path)
 
 const sql = {
-    add: `INSERT INTO "main"."music" ("name", "fileName", "game", "directory", "album", "artist", "container", "codec", "duration", "lossless", "bitrate", "sampleRate", "bitsPerSample", "channels", "cover") VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );`
+    check: `SELECT COUNT( 1 ) AS num FROM music WHERE name = ? AND duration = ? AND container = ?`,
+    add: `INSERT INTO "main"."music" ("name", "fileName", "game", "directory", "album", "artist", "container", "codec", "duration", "lossless", "bitrate", "sampleRate", "bitsPerSample", "channels", "cover") VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );`,
+    getList: `SELECT id,name,fileName,game,directory,album,artist,container,codec,duration,lossless,bitrate,sampleRate,bitsPerSample,channels,cover FROM music`
 }
 
 ipcMain.handle('db-add', (_event, ...args) => {
@@ -18,7 +20,7 @@ ipcMain.handle('db-add', (_event, ...args) => {
                 for (let i in list) {
                     let item = list[i];
                     try {
-                        db.get(`SELECT COUNT( 1 ) AS num FROM music WHERE name = ? AND duration = ? AND container = ?`, [item.name, item.duration, item.container], (error, row) => {
+                        db.get(sql.check, [item.name, item.duration, item.container], (error, row) => {
                             if (error) console.log('add music', error)
                             else if (row.num == 0) {
                                 db.run(sql.add, [item.name, item.fileName, item.game, item.directory, item.album, item.artist, item.container, item.codec, item.duration, item.lossless, item.bitrate, item.sampleRate, item.bitsPerSample, item.channels, item.cover ? item.cover.data : null],
@@ -33,6 +35,22 @@ ipcMain.handle('db-add', (_event, ...args) => {
                 }
             });
             resolve(true);
+        } catch (error) {
+            console.log('database error', error)
+            reject('ERROR')
+        }
+    });
+});
+
+ipcMain.handle('db-get-list', (_event, ...args) => {
+    return new Promise((resolve, reject) => {
+        try {
+            db.serialize(() => {
+                db.all(sql.getList, (error, row) => {
+                    if (error) console.log('get music list', error)
+                    else resolve(row);
+                })
+            });
         } catch (error) {
             console.log('database error', error)
             reject('ERROR')
