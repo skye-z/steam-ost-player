@@ -1,29 +1,28 @@
 <script setup>
-import ReactiveCounter from '/@/components/ReactiveCounter.vue';
-import ReactiveHash from '/@/components/ReactiveHash.vue';
+import ReactiveSteam from '/@/components/ReactiveSteam.vue';
+import ReactiveScan from '/@/components/ReactiveScan.vue';
 import ElectronVersions from '/@/components/ElectronVersions.vue';
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION;
 </script>
 
 <template>
-  <img alt="Vue logo" src="../assets/logo.svg" width="150" />
-
-  <p>
-    应用版本: {{ APP_VERSION }}
-  </p>
-  <p>
-    <a href="https://github.com/cawa-93/vite-electron-builder" target="_blank">配置文档</a>
-  </p>
-
-  <fieldset>
-    <legend>测试 Vue</legend>
-    <reactive-counter />
-  </fieldset>
+  <div style="display: flex;align-items: center;justify-content: center;">
+    <img alt="Vue logo" src="../assets/logo.svg" width="100" />
+    <div style="margin-left: 10px;">
+      <p>
+        应用版本: {{ APP_VERSION }}
+      </p>
+      <p>
+        <a href="https://github.com/cawa-93/vite-electron-builder" target="_blank">配置文档</a>
+      </p>
+    </div>
+  </div>
 
   <fieldset>
-    <legend>测试 Node.js API</legend>
-    <reactive-hash />
+    <legend>测试 Core API</legend>
+    <reactive-steam />
+    <reactive-scan />
   </fieldset>
 
   <fieldset>
@@ -39,12 +38,12 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 60px auto;
+  margin: 20px auto;
   max-width: 700px;
 }
 
 fieldset {
-  margin: 2rem;
+  margin: 1rem;
   padding: 1rem;
 }
 </style>

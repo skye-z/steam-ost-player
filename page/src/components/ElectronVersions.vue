@@ -12,7 +12,6 @@ import {versions} from '#preload';
       <td>v{{ version }}</td>
     </tr>
   </table>
-  <code>basic/renderer/src/components/ElectronVersions.vue</code>
 </template>
 
 <style scoped>
