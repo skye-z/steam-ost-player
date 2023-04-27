@@ -24,7 +24,6 @@ export default {
     find(path) {
       findLibrary(path).then(res => {
         this.library = res;
-        console.log(res)
       }).catch(err => {
         console.log(err)
       })
