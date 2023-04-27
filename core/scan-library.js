@@ -21,7 +21,6 @@ async function traverseGame(path, directory, list) {
         // 遍历文件
         for (let sub in files) {
             let name = files[sub];
-            console.log(name)
             if (!name.endsWith('.flac') && !name.endsWith('.mp3')) continue;
             // 解析音乐文件
             await analysis(list, path, directory.name, name)
@@ -34,7 +33,6 @@ async function traverseGame(path, directory, list) {
 async function analysis(list, path, game, name) {
     try {
         const metadata = await parseFile(path + '\\' + game + '\\' + name);
-        console.log(metadata)
         const common = metadata.common;
         const format = metadata.format;
         let info = {
@@ -81,6 +79,7 @@ export function scanLibrary(paths) {
             // 遍历资源库
             for (let a in paths) {
                 let path = paths[a];
+                if (!fs.existsSync(path)) continue;
                 // 获取资源库下所有文件和文件夹
                 let directorys = traverseDirectory(path);
                 if (directorys == undefined) continue;
