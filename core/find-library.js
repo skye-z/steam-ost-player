@@ -21,7 +21,20 @@ function readLibraryConfig(steamPath) {
 function analysis(date) {
     return new Promise((resolve, reject) => {
         try {
-            // TODO
+            if (date.indexOf("path") == -1) resolve([]);
+            else {
+                let libs = [];
+                let list = date.split('"path"');
+                for (let i in list) {
+                    let item = list[i];
+                    if (item.indexOf('"label"') == -1) continue;
+                    item = item.substring(0, item.indexOf('"label"')).trim();
+                    item = item.substring(1, item.length - 1);
+                    item = item.replaceAll('\\\\','\\').replace(':\\',':\\\\');
+                    libs.push(item+'\\steamapps\\music');
+                }
+                resolve(libs)
+            }
         } catch (error) {
             reject(error);
         }

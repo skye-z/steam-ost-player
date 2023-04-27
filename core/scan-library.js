@@ -21,6 +21,8 @@ async function traverseGame(path, directory, list) {
         // 遍历文件
         for (let sub in files) {
             let name = files[sub];
+            console.log(name)
+            if (!name.endsWith('.flac') && !name.endsWith('.mp3')) continue;
             // 解析音乐文件
             await analysis(list, path, directory.name, name)
         }

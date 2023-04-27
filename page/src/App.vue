@@ -1,6 +1,5 @@
 <script setup>
 import ReactiveSteam from '/@/components/ReactiveSteam.vue';
-import ReactiveScan from '/@/components/ReactiveScan.vue';
 import ElectronVersions from '/@/components/ElectronVersions.vue';
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION;
@@ -22,7 +21,6 @@ const APP_VERSION = import.meta.env.VITE_APP_VERSION;
   <fieldset>
     <legend>测试 Core API</legend>
     <reactive-steam />
-    <reactive-scan />
   </fieldset>
 
   <fieldset>

@@ -3,6 +3,7 @@ node_modules
 dist
 *.local
 thumbs.db
+sop.db
 
 .browserslistrc
 .electron-vendors.cache.json

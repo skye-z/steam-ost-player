@@ -1,20 +1,47 @@
 <template>
-  <label>Steam Path: {{ steamPath }}</label>
+  <div>
+    <div>Steam Path: {{ steamPath }}</div>
+    <div style="display: flex;justify-content: center;">
+      <div>Steam Library:</div>
+      <div style="text-align: left;margin-left: 5px;">
+        <div v-for="item in library">{{ item }}</div>
+      </div>
+    </div>
+    <button @click="scan">扫描</button>
+  </div>
 </template>
 
 <script>
-import { findSteam } from '#preload';
+import { findSteam, findLibrary, scanLibrary } from '#preload';
 
 export default {
   name: "ReactiveSteam",
   data: () => ({
-    steamPath: ''
+    steamPath: '',
+    library: []
   }),
-  methods: {},
+  methods: {
+    find(path) {
+      findLibrary(path).then(res => {
+        this.library = res;
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    scan() {
+      let paths = JSON.parse(JSON.stringify(this.library));
+      scanLibrary(paths).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log('read music list error', error)
+      })
+    }
+  },
   mounted() {
     findSteam().then(res => {
-      console.log(res)
       this.steamPath = res;
+      this.find(res);
     }).catch(err => {
       this.steamPath = err;
     })
