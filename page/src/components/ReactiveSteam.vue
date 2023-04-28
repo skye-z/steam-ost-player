@@ -15,16 +15,20 @@
       <div>{{ item.artist }}</div>
       <div>{{ item.container }}</div>
       <div>
-        <button v-if="playing != index" @click="startMusic(item, index)">播放</button>
+        <button v-if="playing != index" @click="playMusic(item, index)">播放</button>
         <button v-else @click="stopMusic">暂停</button>
       </div>
     </div>
-    <button @click="getMusicList" style="margin: 10px 0;">刷新列表</button>
-    <button @click="stopMusic">暂停</button>
+    <div style="margin: 10px 0;">
+      <button @click="getMusicList">刷新列表</button>
+      <button @click="pauseMusic" style="margin: 0 10px;">暂停</button>
+      <button @click="stopMusic">停止</button>
+    </div>
   </div>
 </template>
 
 <script>
+// import { findSteam, findLibrary, scanLibrary, getList, play, pause, stop } from '#preload';
 import { findSteam, findLibrary, scanLibrary, getList, start, stop } from '#preload';
 
 export default {
@@ -58,9 +62,14 @@ export default {
         console.log('get music list error', error)
       })
     },
-    startMusic(item, index) {
+    playMusic(item, index) {
+      // play(item.directory + '\\' + item.fileName);
       start(item.directory + '\\' + item.fileName);
       this.playing = index;
+    },
+    pauseMusic() {
+      pause()
+      this.playing = -1;
     },
     stopMusic() {
       stop()
