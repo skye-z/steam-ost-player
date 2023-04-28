@@ -15,7 +15,7 @@
       <div>{{ item.artist }}</div>
       <div>{{ item.container }}</div>
       <div>
-        <button v-if="playing != index" @click="playMusic(item, index)">播放</button>
+        <button v-if="playing != index" @click="playMusic(item.code, index)">播放</button>
         <button v-else @click="stopMusic">暂停</button>
       </div>
     </div>
@@ -28,8 +28,7 @@
 </template>
 
 <script>
-// import { findSteam, findLibrary, scanLibrary, getList, play, pause, stop } from '#preload';
-import { findSteam, findLibrary, scanLibrary, getList, start, stop } from '#preload';
+import { findSteam, findLibrary, scanLibrary, getList, load, play, pause, stop } from '#preload';
 
 export default {
   name: "ReactiveSteam",
@@ -58,13 +57,13 @@ export default {
     getMusicList() {
       getList().then(res => {
         this.musicList = res;
+        load(JSON.parse(JSON.stringify(res)));
       }).catch(error => {
         console.log('get music list error', error)
       })
     },
-    playMusic(item, index) {
-      // play(item.directory + '\\' + item.fileName);
-      start(item.directory + '\\' + item.fileName);
+    playMusic(code, index) {
+      play(code);
       this.playing = index;
     },
     pauseMusic() {

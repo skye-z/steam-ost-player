@@ -3,8 +3,6 @@ import './security-restrictions';
 import { join, resolve } from 'node:path';
 import database from './database';
 
-// import './player';
-
 let win = null;
 let tray = null;
 
@@ -52,7 +50,7 @@ async function createWindow() {
   else await win.loadFile(resolve(__dirname, '../../../dist/index.html'));
 
   // 不要关闭窗口,音乐会断
-  win.on('close',e=>{
+  win.on('close', e => {
     e.preventDefault();
     win.hide();
   })
@@ -97,6 +95,25 @@ function initMenu() {
     },
     { type: 'separator' },
     {
+      label: '播放',
+      click: () => {
+        win.webContents.send('player-play')
+      }
+    },
+    {
+      label: '暂停',
+      click: () => {
+        win.webContents.send('player-pause')
+      }
+    },
+    {
+      label: '停止',
+      click: () => {
+        win.webContents.send('player-stop')
+      }
+    },
+    { type: 'separator' },
+    {
       label: '退出',
       click: () => {
         database.close();
@@ -106,7 +123,7 @@ function initMenu() {
   ])
   tray.setToolTip('Steam OST Player');
   tray.setContextMenu(contextMenu);
-  tray.on('click', () => {
-    tray.popUpContextMenu();
+  tray.on('double-click', () => {
+    win.show()
   })
 }

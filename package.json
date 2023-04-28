@@ -37,6 +37,7 @@
     "find-install-path": "^1.0.0",
     "iconv-lite": "^0.6.3",
     "music-metadata": "^7.13.4",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "md5": "^1.1.0"
   }
 }
