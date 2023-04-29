@@ -54,7 +54,7 @@ export default {
         info: {
             name: '',
             game: '',
-            cover: '/steam.svg',
+            cover: 'steam.svg',
             artist: '',
             duration: ''
         }
@@ -107,7 +107,7 @@ export default {
                 this.info = {
                     name: res.name,
                     game: res.game,
-                    cover: '/steam.svg',
+                    cover: 'steam.svg',
                     artist: res.artist,
                     duration: this.getDuration(res.duration)
                 }
@@ -146,8 +146,11 @@ export default {
             this.loading = true;
             this.tips = '正在读取 Steam 资料库...'
             run().then(() => {
-                this.loading = false;
-                this.tips = '更新资料库';
+                this.tips = '正在解析 OST 数据...'
+                setTimeout(() => {
+                    this.loading = false;
+                    this.tips = '更新资料库';
+                }, 5000);
             }).catch(err => {
                 console.log('refresh library error')
             })
@@ -192,7 +195,7 @@ export default {
 }
 
 #player-cover {
-    background: url(/steam.svg) no-repeat;
+    background: url(steam.svg) no-repeat;
     background-color: #1b2230;
     background-size: 100% 100%;
     border-radius: 8px;

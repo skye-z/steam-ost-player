@@ -42,9 +42,7 @@ async function createWindow() {
   win.on('ready-to-show', () => {
     win?.show();
     // 开发环境打开开发工具
-    // if (import.meta.env.DEV) win?.webContents.openDevTools();
-    // 打包测试
-    win?.webContents.openDevTools();
+    if (import.meta.env.DEV) win?.webContents.openDevTools();
   });
 
   // 加载主窗口页面
