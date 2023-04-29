@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.line-1 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

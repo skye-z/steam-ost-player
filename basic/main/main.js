@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron';
+import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
 import './security';
 import { join, resolve } from 'node:path';
 import database from './database';
@@ -18,11 +18,12 @@ if (!app.requestSingleInstanceLock()) {
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Steam Original Soundtrack Player',
-    width: 800,
+    width: 1000,
     height: 600,
-    // frame: false,
+    frame: false,
     center: true,
     resizable: false,
+    transparent: true,
     maximizable: false,
     fullscreenable: false,
     show: false,
@@ -56,6 +57,12 @@ async function createWindow() {
   })
 }
 
+// 应用就绪后开始创建窗口
+app.whenReady().then(() => {
+  initMenu();
+  createWindow();
+}).catch(e => console.error('Failed create window:', e));
+
 app.on('window-all-closed', function () {
 })
 
@@ -68,11 +75,9 @@ app.on('activate', () => {
   }
 })
 
-// 应用就绪后开始创建窗口
-app.whenReady().then(() => {
-  initMenu();
-  createWindow();
-}).catch(e => console.error('Failed create window:', e));
+ipcMain.on('window-close', () => {
+  win.hide();
+})
 
 // 仅在生产环境执行
 if (import.meta.env.PROD) {
@@ -115,14 +120,7 @@ function initMenu() {
     { type: 'separator' },
     {
       label: '退出',
-      click: () => {
-        database.close();
-        win.webContents.send('player-stop');
-        app.quit()
-        setTimeout(() => {
-          app.exit()
-        }, 300);
-      }
+      click: () => exitApp()
     },
   ])
   tray.setToolTip('Steam OST Player');
@@ -130,4 +128,14 @@ function initMenu() {
   tray.on('double-click', () => {
     win.show()
   })
+}
+
+function exitApp() {
+  win.hide();
+  database.close();
+  win.webContents.send('player-stop');
+  app.quit()
+  setTimeout(() => {
+    app.exit()
+  }, 300);
 }

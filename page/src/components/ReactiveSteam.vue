@@ -15,7 +15,7 @@
       <div>{{ item.artist }}</div>
       <div>{{ item.container }}</div>
       <div>
-        <button v-if="playing != index" @click="playMusic(item.code, index)">播放</button>
+        <button class="flex items-center px-4 py-3 text-white bg-blue-500 hover:bg-blue-400" v-if="playing != index" @click="playMusic(item.code, index)">播放</button>
         <button v-else @click="stopMusic">暂停</button>
       </div>
     </div>
