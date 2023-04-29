@@ -42,13 +42,15 @@ async function createWindow() {
   win.on('ready-to-show', () => {
     win?.show();
     // 开发环境打开开发工具
-    if (import.meta.env.DEV) win?.webContents.openDevTools();
+    // if (import.meta.env.DEV) win?.webContents.openDevTools();
+    // 打包测试
+    win?.webContents.openDevTools();
   });
 
   // 加载主窗口页面
   if (import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined)
     await win.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
-  else await win.loadFile(resolve(__dirname, '../../../dist/index.html'));
+  else await win.loadFile(resolve(__dirname, '../dist/index.html'));
 
   // 不要关闭窗口,音乐会断
   win.on('close', e => {

@@ -85,16 +85,13 @@ function playMusic(code) {
 }
 
 function playNext() {
-    if (index == playList.length - 1) index = 0
-    else index++;
-    playMusic(playList[index])
+    playMusic(playList[index == playList.length - 1 ? 0:index+1])
     console.log('[Player] Play next music')
 }
 
 function playLast() {
     if (index == 0) return false;
-    else index--;
-    playMusic(playList[index])
+    playMusic(playList[index - 1])
     console.log('[Player] Play last music')
 }
 

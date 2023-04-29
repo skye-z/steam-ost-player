@@ -84,7 +84,7 @@ function init() {
     db.serialize(() => {
         db.get(`SELECT COUNT(1) as num FROM "music";`, (err, row) => {
             if (err) {
-                console.log('Steam OST Player startup error')
+                console.log('Steam OST Player init database')
                 db.run(`CREATE TABLE "library" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "path" TEXT NOT NULL);`);
                 db.run(`CREATE TABLE "music" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "code" TEXT NOT NULL, "name" TEXT NOT NULL, "fileName" TEXT NOT NULL, "game" TEXT NOT NULL, "directory" TEXT NOT NULL, "album" TEXT, "artist" TEXT, "container" TEXT, "codec" TEXT, "duration" integer, "lossless" integer, "bitrate" integer, "sampleRate" integer, "bitsPerSample" integer, "channels" integer, "cover" blob );`);
                 console.log('init database');
