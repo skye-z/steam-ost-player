@@ -46,7 +46,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #2a2e33;
-  border-radius: 12px;
+  border-radius: 8px;
   color: #b8bcc1;
   width: 1000px;
   height: 600px;

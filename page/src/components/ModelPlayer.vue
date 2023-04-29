@@ -62,7 +62,7 @@ export default {
 <style scoped>
 #player-box {
     background-color: #2b3548;
-    border-radius: 12px 0 0 12px;
+    border-radius: 8px 0 0 8px;
     -webkit-app-region: no-drag;
     padding: 10px;
     height: 600px;
@@ -71,9 +71,9 @@ export default {
 
 #player-cover {
     background: url(../assets/steam.svg) no-repeat;
-    background-color: #273040;
+    background-color: #1b2230;
     background-size: 100% 100%;
-    border-radius: 12px;
+    border-radius: 8px;
     height: 250px;
     width: 250px;
 }
