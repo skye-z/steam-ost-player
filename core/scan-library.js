@@ -1,8 +1,61 @@
 import fs from 'fs';
 import { parseFile } from 'music-metadata';
+import { find } from 'find-install-path';
 import database from './database';
-const decoder = new TextDecoder('utf8');
 
+// 资源库目录配置文件相对路径
+const configPath = '\\config\\libraryfolders.vdf';
+// 读取资源库目录配置文件
+function readLibraryConfig(steamPath) {
+    let libraryConfigPath = steamPath + configPath;
+    return new Promise((resolve, reject) => {
+        try {
+            fs.readFile(libraryConfigPath, (error, data) => {
+                if (error) reject(error);
+                else {
+                    resolve(data.toString())
+                }
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+// 解析资源库目录配置文件
+function analysisLibrary(date) {
+    return new Promise((resolve, reject) => {
+        try {
+            if (date.indexOf("path") == -1) resolve([]);
+            else {
+                let libs = [];
+                let list = date.split('"path"');
+                for (let i in list) {
+                    let item = list[i];
+                    if (item.indexOf('"label"') == -1) continue;
+                    item = item.substring(0, item.indexOf('"label"')).trim();
+                    item = item.substring(1, item.length - 1);
+                    item = item.replaceAll('\\\\', '\\').replace(':\\', ':\\\\');
+                    libs.push(item + '\\steamapps\\music');
+                }
+                resolve(libs)
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+// 查找 Steam 资源库目录
+function findLibrary(steamPath) {
+    return new Promise((resolve, reject) => {
+        try {
+            readLibraryConfig(steamPath).then(data => {
+                analysisLibrary(data).then(res => resolve(res)).catch(err => reject(err));
+            }).catch(err => reject(err));
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 // 遍历文件夹
 function traverseDirectory(path) {
     try {
@@ -23,14 +76,14 @@ async function traverseGame(path, directory, list) {
             let name = files[sub];
             if (!name.endsWith('.flac') && !name.endsWith('.mp3')) continue;
             // 解析音乐文件
-            await analysis(list, path, directory.name, name)
+            await analysisMusic(list, path, directory.name, name)
         }
     } catch (error) {
         console.log('traverse game error', error)
     }
 }
 // 解析音乐文件
-async function analysis(list, path, game, name) {
+async function analysisMusic(list, path, game, name) {
     try {
         const metadata = await parseFile(path + '\\' + game + '\\' + name);
         const common = metadata.common;
@@ -72,7 +125,7 @@ async function analysis(list, path, game, name) {
     }
 }
 // 查找 Steam 资源库目录
-export function scanLibrary(paths) {
+function scanLibrary(paths) {
     return new Promise(async (resolve, reject) => {
         let musicList = []
         try {
@@ -98,5 +151,34 @@ export function scanLibrary(paths) {
             console.log('analysis error', error)
             reject('ERROR');
         }
+    });
+}
+function sendEvent() {
+    const event = new Event('library-update')
+    document.dispatchEvent(event)
+}
+
+export function run() {
+    return new Promise((resolve, reject) => {
+        find('Steam').then(steamPath => {
+            console.log('[Scan] Step1 -> Steam Install Path,', steamPath);
+            findLibrary(steamPath).then(paths => {
+                console.log('[Scan] Step2 -> Steam Library Path', paths);
+                scanLibrary(paths).then(res => {
+                    console.log('[Scan] Step3 -> Scan Library', res);
+                    setTimeout(() => sendEvent(), 1000);
+                    resolve(res);
+                }).catch(err3 => {
+                    console.error('scan music error', err3)
+                    reject(err3);
+                })
+            }).catch(err2 => {
+                console.error('find library error', err2)
+                reject(err2);
+            })
+        }).catch(err1 => {
+            console.error('find steam error', err1)
+            reject(err1);
+        })
     });
 }

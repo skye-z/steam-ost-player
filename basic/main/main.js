@@ -111,12 +111,6 @@ function initMenu() {
         win.webContents.send('player-pause')
       }
     },
-    {
-      label: '停止',
-      click: () => {
-        win.webContents.send('player-stop')
-      }
-    },
     { type: 'separator' },
     {
       label: '退出',

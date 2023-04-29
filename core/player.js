@@ -1,17 +1,11 @@
 import { ipcRenderer } from 'electron';
 const audio = new Audio();
-let isStop = true;
 let playList = [];
 let playMap = {};
 let index = 0;
 
 // 事件 播放完毕
-audio.onended = () => {
-    if (index == playList.length - 1) index = 0
-    else index++;
-    playMusic(playList[index])
-    console.log('[Player] Play next song')
-}
+audio.onended = () => playNext()
 
 // 导出函数
 export const player = {
@@ -27,29 +21,36 @@ export const player = {
     },
     pause() {
         audio.pause();
-        isStop = true;
         sendEvent('pause');
     },
-    stop() {
-        audio.pause();
-        isStop = true;
-        sendEvent('stop');
+    next() {
+        playNext();
     },
-    getNow(){
+    last() {
+        playLast();
+    },
+    getNow() {
         let code = playList[index]
-        if(code) return playMap[code];
+        if (code) return playMap[code];
         else return undefined;
+    },
+    getStatus() {
+        return {
+            currentTime: audio.currentTime,
+            muted: audio.muted,
+            volume: audio.volume,
+            playbackRate: audio.playbackRate
+        }
     }
 }
 
 // 监听主线程 开始播放
 ipcRenderer.on('player-play', () => {
-    if (isStop) {
-        audio.load();
-        isStop = false;
-        sendEvent('play');
-    } else console.log('[Player] Resume playback')
-    audio.play();
+    let code = playList[index];
+    if (code) {
+        playMusic(code);
+        sendEvent('play', playMap[code]);
+    }
 });
 
 // 监听主线程 恢复播放
@@ -59,37 +60,42 @@ ipcRenderer.on('player-pause', () => {
     console.log('[Player] Pause playback')
 });
 
-// 监听主线程 停止播放
-ipcRenderer.on('player-stop', () => {
-    audio.pause();
-    isStop = true;
-    sendEvent('stop');
-    console.log('[Player] Stop playback')
-});
-
 // 播放音乐
 function playMusic(code) {
-    if(code == undefined) code = playList[index];
+    if (code == undefined) code = playList[index];
     let item = playMap[code];
     if (item) {
-        let music = undefined;
-        for (let i in item.containers) {
-            if (item.containers[i].lossless) {
-                music = item.containers[i]
-                break;
+        if (!audio.src || playList.indexOf(code) != index) {
+            let music = undefined;
+            for (let i in item.containers) {
+                if (item.containers[i].lossless) {
+                    music = item.containers[i]
+                    break;
+                }
             }
-        }
-        if (music == undefined) music = item.containers[0]
-        console.log('[Player] Start playing: ' + item.name)
-        index = playList.indexOf(code);
-        sendEvent('play', item);
-        audio.src = music.path;
-        if (isStop) {
+            if (music == undefined) music = item.containers[0]
+            console.log('[Player] Start playing: ' + item.name)
+            index = playList.indexOf(code);
+            sendEvent('play', item);
+            audio.src = music.path;
             audio.load();
-            isStop = false;
-        }
+        } else sendEvent('restore', item);
         audio.play();
-    } else sendEvent('stop')
+    } else sendEvent('error')
+}
+
+function playNext() {
+    if (index == playList.length - 1) index = 0
+    else index++;
+    playMusic(playList[index])
+    console.log('[Player] Play next music')
+}
+
+function playLast() {
+    if (index == 0) return false;
+    else index--;
+    playMusic(playList[index])
+    console.log('[Player] Play last music')
 }
 
 function sendEvent(action, data) {

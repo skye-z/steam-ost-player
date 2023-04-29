@@ -10,7 +10,7 @@ console.log('database path: ' + path)
 const sql = {
     check: `SELECT COUNT( 1 ) AS num FROM music WHERE name = ? AND duration = ? AND container = ?`,
     add: `INSERT INTO "main"."music" ("code", "name", "fileName", "game", "directory", "album", "artist", "container", "codec", "duration", "lossless", "bitrate", "sampleRate", "bitsPerSample", "channels", "cover") VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );`,
-    getList: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,lossless,bitrate,sampleRate FROM music`,
+    getList: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,duration,lossless,bitrate,sampleRate FROM music`,
     getItem: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,duration,lossless,bitrate,sampleRate,bitsPerSample,channels,cover FROM music WHERE code = ?`,
 }
 
@@ -22,11 +22,12 @@ ipcMain.handle('db-add', (_event, ...args) => {
                 for (let i in list) {
                     let item = list[i];
                     try {
-                        db.get(sql.check, [item.name, item.duration, item.container], (error, row) => {
+                        let duration = Math.round(parseFloat(item.duration));
+                        db.get(sql.check, [item.name, duration, item.container], (error, row) => {
                             if (error) console.log('add music', error)
                             else if (row.num == 0) {
-                                let code = md5(item.name + ':' + item.game + ':' + item.artist);
-                                db.run(sql.add, [code, item.name, item.fileName, item.game, item.directory, item.album, item.artist, item.container, item.codec, item.duration, item.lossless, item.bitrate, item.sampleRate, item.bitsPerSample, item.channels, item.cover ? item.cover.data : null],
+                                let code = md5(item.name + ':' + item.game);
+                                db.run(sql.add, [code, item.name, item.fileName, item.game, item.directory, item.album, item.artist, item.container, item.codec, duration, item.lossless, item.bitrate, item.sampleRate, item.bitsPerSample, item.channels, item.cover ? item.cover.data : null],
                                     err => {
                                         if (err) console.log('add music', err)
                                     });

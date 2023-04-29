@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import ReactiveSteam from '/@/components/ReactiveSteam.vue';
 import ModelPlayer from '/@/components/ModelPlayer.vue';
 import ModelLibrary from '/@/components/ModelLibrary.vue';
 
@@ -18,8 +17,12 @@ export default {
   methods: {
     initListener() {
       document.addEventListener("player-event", e => {
-        this.$refs.player.eventHandle(e.detail.action,e.detail.data)
-        this.$refs.library.eventHandle(e.detail.action,e.detail.data)
+        this.$refs.player.eventHandle(e.detail.action, e.detail.data)
+        this.$refs.library.eventHandle(e.detail.action, e.detail.data)
+      })
+      document.addEventListener("library-update", e => {
+        this.$refs.library.getLibraryList()
+        setTimeout(() => this.$refs.player.init(), 300)
       })
     }
   },
