@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { findSteam, findLibrary, scanLibrary, getList, load, play, pause, stop } from '#preload';
+import { findSteam, findLibrary, scanLibrary, getList, player } from '#preload';
 
 export default {
   name: "ReactiveSteam",
@@ -57,21 +57,21 @@ export default {
     getMusicList() {
       getList().then(res => {
         this.musicList = res;
-        load(JSON.parse(JSON.stringify(res)));
+        player.load(JSON.parse(JSON.stringify(res)));
       }).catch(error => {
         console.log('get music list error', error)
       })
     },
     playMusic(code, index) {
-      play(code);
+      player.play(code);
       this.playing = index;
     },
     pauseMusic() {
-      pause()
+      player.pause()
       this.playing = -1;
     },
     stopMusic() {
-      stop()
+      player.stop()
       this.playing = -1;
     }
   },

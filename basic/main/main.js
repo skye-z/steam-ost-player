@@ -1,5 +1,5 @@
 import { app, BrowserWindow, Tray, Menu } from 'electron';
-import './security-restrictions';
+import './security';
 import { join, resolve } from 'node:path';
 import database from './database';
 
@@ -117,7 +117,11 @@ function initMenu() {
       label: '退出',
       click: () => {
         database.close();
+        win.webContents.send('player-stop');
         app.quit()
+        setTimeout(() => {
+          app.exit()
+        }, 300);
       }
     },
   ])

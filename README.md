@@ -33,3 +33,4 @@ https://blog.csdn.net/qq_42208826/article/details/107359532
 ## 鸣谢
 
 * [audiomotion-analyzer](https://www.npmjs.com/package/audiomotion-analyzer): 实时音频频谱分析
+* [mdns](https://www.npmjs.com/package/mdns): 多播 DNS 服务(需要安装 [Bonjour SDK for Windows v3.0](https://developer.apple.com/download/all/?q=Bonjour%20SDK%20for%20Windows) )

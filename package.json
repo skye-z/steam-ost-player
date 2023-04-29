@@ -33,11 +33,12 @@
     "vue-tsc": "1.4.4"
   },
   "dependencies": {
-    "electron-updater": "5.3.0",
     "find-install-path": "^1.0.0",
-    "iconv-lite": "^0.6.3",
+    "electron-updater": "5.3.0",
+    "bonjour-service": "^1.1.1",
     "music-metadata": "^7.13.4",
+    "iconv-lite": "^0.6.3",
     "sqlite3": "^5.1.6",
-    "md5": "^1.1.0"
+    "md5": "^2.3.0"
   }
 }

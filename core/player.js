@@ -13,30 +13,26 @@ audio.onended = () => {
     console.log('[Player] Play next song')
 }
 
-// 导出函数 加载播单
-export function load(data) {
-    playList = [];
-    playMap = data;
-    for (let code in data) {
-        playList.push(code);
+// 导出函数
+export const player = {
+    load(data) {
+        playList = [];
+        playMap = data;
+        for (let code in data) {
+            playList.push(code);
+        }
+    },
+    play(code) {
+        playMusic(code)
+    }, 
+    pause() {
+        audio.pause();
+        isStop = true;
+    }, 
+    stop() {
+        audio.pause();
+        isStop = true;
     }
-}
-
-// 导出函数 开始播放
-export function play(code) {
-    playMusic(code)
-}
-
-// 导出函数 恢复播放
-export function pause() {
-    audio.pause();
-    isStop = true;
-}
-
-// 导出函数 停止播放
-export function stop() {
-    audio.pause();
-    isStop = true;
 }
 
 // 监听主线程 开始播放

@@ -78,6 +78,6 @@ function init() {
 
 export default {
     close: () => {
-        db.close();
+        try { db.close(); } catch (err) { }
     }
 }
