@@ -13,10 +13,10 @@ module.exports = async function () {
 
   return {
     directories: {
-      output: 'dist',
+      output: 'dist-compile',
       buildResources: 'other/build',
     },
-    files: ['dist/**'],
+    files: ['dist/**','other/build/**'],
     extraMetadata: {
       version: getVersion(),
     },

@@ -1,6 +1,7 @@
 node_modules
 .DS_Store
 dist
+dist-compile
 *.local
 thumbs.db
 sop.db

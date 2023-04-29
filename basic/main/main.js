@@ -81,16 +81,18 @@ ipcMain.on('window-close', () => {
 
 // 仅在生产环境执行
 if (import.meta.env.PROD) {
+  // 尚未发布
   // 应用就绪后检查更新
   // https://www.electron.build/auto-update.html#quick-setup-guide
-  app.whenReady().then(() => import('electron-updater')).then(module => {
-    const autoUpdater = module.autoUpdater || module.default.autoUpdater;
-    return autoUpdater.checkForUpdatesAndNotify();
-  }).catch(e => console.error('Failed check and install updates:', e));
+  // app.whenReady().then(() => import('electron-updater')).then(module => {
+  //   const autoUpdater = module.autoUpdater || module.default.autoUpdater;
+  //   return autoUpdater.checkForUpdatesAndNotify();
+  // }).catch(e => console.error('Failed check and install updates:', e));
 }
 
 function initMenu() {
-  tray = new Tray(join(join(__dirname, import.meta.env.PROD ? '..' : '../other/build'), 'icon.png'));
+  tray = new Tray(join(join(__dirname, '../other/build'), 'icon.png'));
+  // tray = new Tray(join(join(__dirname, import.meta.env.PROD ? '..' : '../other/build'), 'icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '显示窗口',
