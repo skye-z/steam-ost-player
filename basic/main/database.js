@@ -11,7 +11,7 @@ const sql = {
     check: `SELECT COUNT( 1 ) AS num FROM music WHERE name = ? AND duration = ? AND container = ?`,
     add: `INSERT INTO "main"."music" ("code", "name", "fileName", "game", "directory", "album", "artist", "container", "codec", "duration", "lossless", "bitrate", "sampleRate", "bitsPerSample", "channels", "cover") VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );`,
     getList: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,lossless,bitrate,sampleRate FROM music`,
-    getItem: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,duration,lossless,bitrate,sampleRate,bitsPerSample,channels,cover FROM music WHERE id = ?`,
+    getItem: `SELECT id,code,name,fileName,game,directory,album,artist,container,codec,duration,lossless,bitrate,sampleRate,bitsPerSample,channels,cover FROM music WHERE code = ?`,
 }
 
 ipcMain.handle('db-add', (_event, ...args) => {
@@ -60,6 +60,23 @@ ipcMain.handle('db-get-list', (_event, ...args) => {
         }
     });
 });
+
+ipcMain.handle('db-get-item', (_event, ...args) => {
+    let code = args[0];
+    return new Promise((resolve, reject) => {
+        try {
+            db.serialize(() => {
+                db.all(sql.getItem, code, (error, row) => {
+                    if (error) console.log('get music item', error)
+                    else resolve(row);
+                })
+            });
+        } catch (error) {
+            console.log('database error', error)
+            reject('ERROR')
+        }
+    });
+})
 
 init();
 function init() {

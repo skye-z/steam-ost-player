@@ -42,6 +42,52 @@ export function getList() {
     });
 }
 
+export function getItem(code) {
+    return new Promise((resolve, reject) => {
+        ipcRenderer.invoke('db-get-item',code).then(res => {
+            if(!res){
+                reject('ERROR')
+                return false;
+            } 
+            let info = undefined;
+            for (let i in res) {
+                let item = res[i];
+                if (info == undefined) {
+                    info = {
+                        code: item.code,
+                        name: item.name,
+                        game: item.game,
+                        cover: item.cover,
+                        artist: item.artist,
+                        duration: item.duration,
+                        containers: [{
+                            name: item.container,
+                            bitrate: item.bitrate,
+                            bitsPerSample: item.bitsPerSample,
+                            sampleRate: item.sampleRate,
+                            lossless: item.lossless,
+                            path: item.directory + '\\' + item.fileName
+                        }]
+                    }
+                } else {
+                    if (info.cover == undefined) info.cover = item.cover
+                    info.containers.push({
+                        name: item.container,
+                        bitrate: item.bitrate,
+                        bitsPerSample: item.bitsPerSample,
+                        sampleRate: item.sampleRate,
+                        lossless: item.lossless,
+                        path: item.directory + '\\' + item.fileName
+                    })
+                }
+            }
+            resolve(info)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}
+
 export default {
     add: list => {
         let copy = JSON.parse(JSON.stringify(list))

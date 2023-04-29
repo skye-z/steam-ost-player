@@ -1,6 +1,6 @@
 <template>
     <div id="player-box">
-        <div id="player-cover"></div>
+        <div id="player-cover" :style="{'background-image': `url(${info.cover})`}"></div>
         <div id="player-info">
             <div class="line-1" id="info-game">{{ info.game }}</div>
             <div class="line-1" id="info-name">{{ info.name }}</div>
@@ -30,6 +30,7 @@
 </template>
   
 <script>
+import { getItem, player } from '#preload';
 import { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, Speaker248Filled } from '@vicons/fluent'
 
 export default {
@@ -38,23 +39,64 @@ export default {
     data: () => ({
         isPlay: false,
         info: {
-            name: "The Data Is Wranglin' Itself (with Shalin Shodhan)",
-            game: '7 Billion Humans Soundtrack',
-            artist: 'Kyle Gabler',
-            duration: '3:12',
-            container: 'FLAC',
-            lossless: true
+            name: '',
+            game: '',
+            cover: '../assets/steam.svg',
+            artist: '',
+            duration: ''
         }
     }),
     methods: {
+        eventHandle(action, data) {
+            console.log(action, data)
+            switch (action) {
+                case 'play':
+                    this.isPlay = true;
+                    if (data) this.updateInfo(data)
+                    break;
+                default:
+                    break;
+            }
+        },
+        updateInfo(info) {
+            this.info = {
+                name: info.name,
+                game: info.game,
+                artist: info.artist,
+                duration: info.duration
+            }
+            this.loadMuiscData(info.code)
+        },
+        loadMuiscData(code) {
+            getItem(code).then(res => {
+                this.info = {
+                    name: res.name,
+                    game: res.game,
+                    cover: res.cover ? res.cover:'../assets/steam.svg',
+                    artist: res.artist,
+                    duration: res.duration
+                }
+                console.log('loadMuiscData', res)
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         play() {
             if (this.isPlay) return false;
             this.isPlay = true;
+            player.play()
         },
         pause() {
             if (!this.isPlay) return false;
             this.isPlay = false;
+            player.pause()
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            let now = player.getNow();
+            if (now) this.updateInfo(now)
+        }, 500)
     }
 };
 </script>
@@ -82,6 +124,7 @@ export default {
     position: relative;
     overflow: hidden;
     width: 250px;
+    height: 50px;
 }
 
 #info-game {

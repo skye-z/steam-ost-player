@@ -24,14 +24,21 @@ export const player = {
     },
     play(code) {
         playMusic(code)
-    }, 
+    },
     pause() {
         audio.pause();
         isStop = true;
-    }, 
+        sendEvent('pause');
+    },
     stop() {
         audio.pause();
         isStop = true;
+        sendEvent('stop');
+    },
+    getNow(){
+        let code = playList[index]
+        if(code) return playMap[code];
+        else return undefined;
     }
 }
 
@@ -40,6 +47,7 @@ ipcRenderer.on('player-play', () => {
     if (isStop) {
         audio.load();
         isStop = false;
+        sendEvent('play');
     } else console.log('[Player] Resume playback')
     audio.play();
 });
@@ -47,6 +55,7 @@ ipcRenderer.on('player-play', () => {
 // 监听主线程 恢复播放
 ipcRenderer.on('player-pause', () => {
     audio.pause();
+    sendEvent('pause');
     console.log('[Player] Pause playback')
 });
 
@@ -54,11 +63,13 @@ ipcRenderer.on('player-pause', () => {
 ipcRenderer.on('player-stop', () => {
     audio.pause();
     isStop = true;
+    sendEvent('stop');
     console.log('[Player] Stop playback')
 });
 
 // 播放音乐
 function playMusic(code) {
+    if(code == undefined) code = playList[index];
     let item = playMap[code];
     if (item) {
         let music = undefined;
@@ -71,11 +82,17 @@ function playMusic(code) {
         if (music == undefined) music = item.containers[0]
         console.log('[Player] Start playing: ' + item.name)
         index = playList.indexOf(code);
+        sendEvent('play', item);
         audio.src = music.path;
         if (isStop) {
             audio.load();
             isStop = false;
         }
         audio.play();
-    }
+    } else sendEvent('stop')
+}
+
+function sendEvent(action, data) {
+    const event = new CustomEvent("player-event", { detail: { action, data } })
+    document.dispatchEvent(event)
 }

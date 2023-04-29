@@ -53,8 +53,8 @@ export default {
         playing: -1
     }),
     methods: {
-        closeWindow() {
-            close()
+        eventHandle(action, data) {
+            console.log(action, data)
         },
         getLibraryList() {
             getList().then(res => {
@@ -73,6 +73,9 @@ export default {
             player.play(code);
             this.playing = index;
         },
+        closeWindow() {
+            close()
+        }
     },
     mounted() {
         setTimeout(() => {
@@ -208,7 +211,7 @@ export default {
     color: #fff;
 }
 
-.playing-icon{
+.playing-icon {
     margin-right: 3px;
     margin-left: -5px;
     width: 16px;
