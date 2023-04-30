@@ -22,21 +22,26 @@ module.exports = async function () {
     extraMetadata: {
       version: getVersion(),
     },
+    nsis: {
+      oneClick: false,
+      allowElevation: true,
+      allowToChangeInstallationDirectory: true,
+      createDesktopShortcut: true,
+      createStartMenuShortcut: true,
+      shortcutName: "Steam OST Player",
+      runAfterFinish: false,
+    },
     win: {
       artifactName: '${productName}-${platform}-${arch}-${version}.${ext}',
       target: [
         {
           target: 'nsis',
           arch: [
-            "x64",
-            "ia32"
+            'x64',
+            'ia32'
           ]
         }
       ],
-    },
-    // Specify linux target just for disabling snap compilation
-    linux: {
-      target: 'deb',
-    },
+    }
   };
 };
