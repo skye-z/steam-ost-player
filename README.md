@@ -12,6 +12,9 @@
 * [ ] 频谱可视化
 * [ ] 音乐风格分析
 
+## 已知问题
+
+* [ ] 播放器已播时间不准 -> 不影响核心功能,推后修复
 
 ## 文件结构
 
@@ -31,4 +34,7 @@
 
 ## 鸣谢
 
+* [find-install-path](https://www.npmjs.com/package/find-install-path): 查找应用程序安装位置
+* [music-metadata](https://www.npmjs.com/package/music-metadata): 媒体数据解析
+* [sqlite3](https://www.npmjs.com/package/sqlite3): SQLite3 数据库
 * [audiomotion-analyzer](https://www.npmjs.com/package/audiomotion-analyzer): 实时音频频谱分析
