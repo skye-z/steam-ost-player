@@ -55,7 +55,7 @@ export default {
         info: {
             name: '',
             game: '',
-            cover: 'steam.svg',
+            cover: 'cover.svg',
             artist: '',
             duration: ''
         },
@@ -110,7 +110,7 @@ export default {
                 this.info = {
                     name: res.name,
                     game: res.game,
-                    cover: 'steam.svg',
+                    cover: 'cover.svg',
                     artist: res.artist,
                     duration: this.getDuration(res.duration)
                 }
@@ -198,7 +198,7 @@ export default {
 }
 
 #player-cover {
-    background: url(steam.svg) no-repeat;
+    background: url(cover.svg) no-repeat;
     background-color: #1b2230;
     background-size: 100% 100%;
     border-radius: 8px;
