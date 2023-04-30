@@ -1,11 +1,8 @@
-import { app, ipcMain } from 'electron';
-import { join } from 'node:path';
+import { ipcMain } from 'electron';
 import md5 from 'md5';
-const path = join(app.getAppPath('userData'), 'sop.db')
-const sqlite3 = require('sqlite3');
-// const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(path);
-console.log('database path: ' + path)
+const sqlite = require('sqlite3');
+let path;
+let db;
 
 const sql = {
     check: `SELECT COUNT( 1 ) AS num FROM music WHERE name = ? AND duration = ? AND container = ?`,
@@ -79,22 +76,23 @@ ipcMain.handle('db-get-item', (_event, ...args) => {
     });
 })
 
-init();
-function init() {
-    db.serialize(() => {
-        db.get(`SELECT COUNT(1) as num FROM "music";`, (err, row) => {
-            if (err) {
-                console.log('Steam OST Player init database')
-                db.run(`CREATE TABLE "library" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "path" TEXT NOT NULL);`);
-                db.run(`CREATE TABLE "music" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "code" TEXT NOT NULL, "name" TEXT NOT NULL, "fileName" TEXT NOT NULL, "game" TEXT NOT NULL, "directory" TEXT NOT NULL, "album" TEXT, "artist" TEXT, "container" TEXT, "codec" TEXT, "duration" integer, "lossless" integer, "bitrate" integer, "sampleRate" integer, "bitsPerSample" integer, "channels" integer, "cover" blob );`);
-                console.log('init database');
-            }
-            else console.log('Steam OST Player has started and currently includes ' + row.num + ' OSTs')
-        })
-    });
-}
-
 export default {
+    init: (path) => {
+        path = path + '/sop.db'
+        console.log('database path: ' + path)
+        if (sqlite == undefined) sqlite = driver.verbose();
+        if (db == undefined) db = new sqlite.Database(path);
+        db.serialize(() => {
+            db.get(`SELECT COUNT(1) as num FROM "music";`, (err, row) => {
+                if (err) {
+                    console.log('Steam OST Player init database')
+                    db.run(`CREATE TABLE "library" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "path" TEXT NOT NULL);`);
+                    db.run(`CREATE TABLE "music" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "code" TEXT NOT NULL, "name" TEXT NOT NULL, "fileName" TEXT NOT NULL, "game" TEXT NOT NULL, "directory" TEXT NOT NULL, "album" TEXT, "artist" TEXT, "container" TEXT, "codec" TEXT, "duration" integer, "lossless" integer, "bitrate" integer, "sampleRate" integer, "bitsPerSample" integer, "channels" integer, "cover" blob );`);
+                }
+                else console.log('Steam OST Player has started and currently includes ' + row.num + ' OSTs')
+            })
+        });
+    },
     close: () => {
         try { db.close(); } catch (err) { }
     }

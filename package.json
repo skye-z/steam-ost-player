@@ -14,7 +14,7 @@
     "build:main": "cd ./basic/main && vite build",
     "build:preload": "cd ./basic/preload && vite build",
     "build:page": "cd ./page && vite build",
-    "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
+    "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=true",
     "watch": "node other/scripts/watch.mjs",
     "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron other/scripts/update-electron-vendors.mjs"
   },

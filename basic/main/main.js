@@ -27,6 +27,7 @@ async function createWindow() {
     maximizable: false,
     fullscreenable: false,
     show: false,
+    icon: join(join(__dirname, '../other/build'), 'tray.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -60,6 +61,8 @@ async function createWindow() {
 // 应用就绪后开始创建窗口
 app.whenReady().then(() => {
   initMenu();
+  // 初始化数据库
+  database.init(app.getPath('userData'));
   createWindow();
 }).catch(e => console.error('Failed create window:', e));
 
@@ -91,8 +94,8 @@ if (import.meta.env.PROD) {
 }
 
 function initMenu() {
-  tray = new Tray(join(join(__dirname, '../other/build'), 'icon.png'));
-  // tray = new Tray(join(join(__dirname, import.meta.env.PROD ? '..' : '../other/build'), 'icon.png'));
+  tray = new Tray(join(join(__dirname, '../other/build'), 'tray.png'));
+  // tray = new Tray(join(join(__dirname, import.meta.env.PROD ? '..' : '../other/build'), 'tray.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '显示窗口',

@@ -34,11 +34,12 @@
             </div> -->
         </div>
         <div id="refresh" :class="{ disable: loading }" @click="refreshLibrary">{{ tips }}</div>
+        <div id="version">Steam OST Player v{{ version }}</div>
     </div>
 </template>
   
 <script>
-import { run, getItem, player } from '#preload';
+import { run, getItem, player,getVersion } from '#preload';
 import { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, Speaker248Filled } from '@vicons/fluent'
 
 export default {
@@ -57,10 +58,12 @@ export default {
             cover: 'steam.svg',
             artist: '',
             duration: ''
-        }
+        },
+        version: '0.0.0'
     }),
     methods: {
         init() {
+            this.version = getVersion();
             let now = player.getNow();
             if (now) this.updateInfo(now)
         },
@@ -310,7 +313,7 @@ export default {
     cursor: pointer;
     color: #fff;
     padding: 5px;
-    bottom: 10px;
+    bottom: 28px;
     left: 10px;
 }
 
@@ -325,6 +328,16 @@ export default {
 #refresh.disable {
     color: #b8bcc1;
     cursor: wait;
+}
+
+#version{
+    text-align: center;
+    position: absolute;
+    color: #707880;
+    font-size: 12px;
+    width: 250px;
+    bottom: 5px;
+    left: 10px;
 }
 </style>
   
