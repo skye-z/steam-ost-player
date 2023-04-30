@@ -1,6 +1,7 @@
 # Steam OST Player
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
+[![CodeQL](https://github.com/skay-zhang/steam-ost-player/workflows/CodeQL/badge.svg)](https://github.com/skay-zhang/steam-ost-player/security/code-scanning)
 
 Steam 原声配乐(OST)播放器, 与 Steam 资源库无缝连接, 支持自动从 Steam 资源库读取 OST.
 
@@ -9,11 +10,17 @@ Steam 原声配乐(OST)播放器, 与 Steam 资源库无缝连接, 支持自动�
 ## 使用方法
 
 1. 下载安装包后解压在任意目录
-2. 双击`Steam OST Player.exe`运行
-3. 点击应用左下角`更新资料库`按钮
+2. 双击 `Steam OST Player.exe` 运行
+3. 点击应用左下角 `更新资料库` 按钮
 4. 更新完成后在右侧列表点击即可播放
 
-> 若出现更新资料库完成但右侧列表任然为空, 可点击顶部的`刷新`按钮手动刷新列表
+> 若出现更新资料库完成但右侧列表任然为空, 可点击顶部的 `刷新` 按钮手动刷新列表
+
+## 更新应用
+
+当前暂不支持自动更新, 请在 `Releases` 下载最新版本后覆盖即可.
+
+数据库文件存储在 `C:\Users\当前用户\AppData\Roaming\steam-ost-player/sop.db`, 而 OST 文件存储在 Steam 资料库中
 
 ## 功能计划
 
@@ -22,10 +29,13 @@ Steam 原声配乐(OST)播放器, 与 Steam 资源库无缝连接, 支持自动�
 * [x] 媒体数据解析
 * [x] 自动获取封面
 * [x] 后台播放
+* [ ] 单曲循环
+* [ ] 随机播放
 * [ ] 自定义合集
 * [ ] 收藏音乐
 * [ ] 频谱可视化
 * [ ] 音乐风格分析
+* [ ] 应用版本检测与更新
 
 ## 已知问题
 
