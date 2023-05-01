@@ -39,15 +39,16 @@ export const player = {
     last() {
         if (model == 1) playRandomMusic()
         else playLast()
-    }, 
-    switchModel(newModel){
+    },
+    switchModel(newModel) {
+        console.log('switch model ' + model + ' -> ' + newModel);
         model = newModel;
     },
-    switchSpeaker(newSpeaker){
+    switchSpeaker(newSpeaker) {
         speaker = newSpeaker;
-        if(speaker == 0) audio.volume = 0.0;
-        else if(speaker == 1) audio.volume = 0.5;
-        else if(speaker == 2) audio.volume = 1.0;
+        if (speaker == 0) audio.volume = 0.0;
+        else if (speaker == 1) audio.volume = 0.5;
+        else if (speaker == 2) audio.volume = 1.0;
     },
     getNow() {
         let code = playList[index]
@@ -116,8 +117,9 @@ function playLast() {
 }
 // 播放随机曲目
 function playRandomMusic() {
-    index = Math.floor(Math.random() * (playList.length + 1));
-    playMusic(playList[index])
+    let random = Math.floor(Math.random() * (playList.length + 1));
+    if (random == playList.length) random = random - 1;
+    playMusic(playList[random])
 }
 // 获取播放状态
 function playStatus(force) {
