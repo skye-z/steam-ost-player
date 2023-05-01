@@ -130,10 +130,11 @@ export default {
         getDuration(num) {
             let m = '';
             if (num > 59) {
-                m = parseInt(num / 60).toFixed(0);
+                m = parseInt(num / 60).toFixed(0).toString().padStart(2, '0');
                 num = num - (parseInt(m) * 60);
             }
-            if (m == '') return '0:' + num;
+            num = num.toString().padStart(2, '0');
+            if (m == '') return '00:' + num;
             return m + ':' + num;
         }
     },

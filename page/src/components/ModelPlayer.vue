@@ -12,10 +12,11 @@
             </div>
         </div>
         <div id="player-controller">
-            <!-- TODO -->
-            <!-- <div id="controller-circulate">
-                <ArrowRepeatAll24Filled />
-            </div> -->
+            <div id="controller-circulate" @click="switchModel">
+                <ArrowRepeatAll24Filled v-if="model == 0" />
+                <ArrowRouting24Filled v-else-if="model == 1" />
+                <ArrowSync24Filled v-else-if="model == 2" />
+            </div>
             <div id="controller-pre" @click="last">
                 <Previous48Filled />
             </div>
@@ -28,10 +29,11 @@
             <div id="controller-next" @click="next">
                 <Next48Filled />
             </div>
-            <!-- TODO -->
-            <!-- <div id="controller-speaker">
-                <Speaker248Filled />
-            </div> -->
+            <div id="controller-speaker" @click="switchSpeaker">
+                <SpeakerMute48Filled v-if="speaker == 0" />
+                <Speaker148Filled v-else-if="speaker == 1" />
+                <Speaker248Filled v-else-if="speaker == 2" />
+            </div>
         </div>
         <div id="refresh" :class="{ disable: loading }" @click="refreshLibrary">{{ tips }}</div>
         <div id="version">Steam OST Player v{{ version }}</div>
@@ -40,11 +42,11 @@
   
 <script>
 import { run, getItem, player, getVersion } from '#preload';
-import { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, Speaker248Filled } from '@vicons/fluent'
+import { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, ArrowSync24Filled, ArrowRouting24Filled, SpeakerMute48Filled, Speaker148Filled, Speaker248Filled } from '@vicons/fluent'
 
 export default {
     name: "ModelPlayer",
-    components: { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, Speaker248Filled },
+    components: { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, ArrowSync24Filled, ArrowRouting24Filled, SpeakerMute48Filled, Speaker148Filled, Speaker248Filled },
     data: () => ({
         isPlay: false,
         loading: false,
@@ -59,13 +61,16 @@ export default {
             artist: '',
             duration: ''
         },
+        model: 0,
+        speaker: 2,
         version: '0.0.0'
     }),
     methods: {
         init() {
             this.version = getVersion();
             let now = player.getNow();
-            if (now) this.updateInfo(now)
+            if (now.info) this.updateInfo(now.info);
+            this.updateStatus(now.status);
         },
         eventHandle(action, data) {
             console.log(action, data)
@@ -104,6 +109,8 @@ export default {
             this.loadMuiscData(info.code);
         },
         updateStatus(status) {
+            this.model = status.model;
+            this.speaker = status.speaker;
             this.isPlay = status.play;
             this.playTime = parseFloat(status.currentTime).toFixed(0);
             this.playTimeText = this.getDuration(this.playTime);
@@ -128,6 +135,16 @@ export default {
             }).catch(err => {
                 console.log(err)
             })
+        },
+        switchModel(){
+            if(this.model == 2) this.model = 0;
+            else this.model = this.model + 1;
+            player.switchModel(this.model)
+        },
+        switchSpeaker(){
+            if(this.speaker == 2) this.speaker = 0;
+            else this.speaker = this.speaker + 1;
+            player.switchSpeaker(this.speaker)
         },
         play() {
             if (this.isPlay) return false;
@@ -233,7 +250,7 @@ export default {
     left: 3px;
 }
 
-#info-game:hover{
+#info-game:hover {
     background-color: #2a2e33;
 }
 
