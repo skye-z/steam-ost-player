@@ -1,7 +1,6 @@
 import { ipcMain } from 'electron';
 import md5 from 'md5';
 const sqlite = require('sqlite3');
-let path;
 let db;
 
 const sql = {

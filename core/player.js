@@ -5,7 +5,7 @@ let playMap = {};
 let index = 0;
 
 // 事件 播放完毕
-audio.onended = () => playNext()
+audio.onended = () => playNext();
 
 // 导出函数
 export const player = {
@@ -17,16 +17,20 @@ export const player = {
         }
     },
     play(code) {
+        console.log('[前台] 开始播放', code);
         playMusic(code)
     },
     pause() {
+        console.log('[前台] 暂停播放');
         audio.pause();
-        sendEvent('pause');
+        sendEvent('pause', { status: playStatus(false) });
     },
     next() {
+        console.log('[前台] 下一首');
         playNext();
     },
     last() {
+        console.log('[前台] 上一首');
         playLast();
     },
     getNow() {
@@ -35,12 +39,7 @@ export const player = {
         else return undefined;
     },
     getStatus() {
-        return {
-            currentTime: audio.currentTime,
-            muted: audio.muted,
-            volume: audio.volume,
-            playbackRate: audio.playbackRate
-        }
+        return playStatus()
     }
 }
 
@@ -49,14 +48,13 @@ ipcRenderer.on('player-play', () => {
     let code = playList[index];
     if (code) {
         playMusic(code);
-        sendEvent('play', playMap[code]);
     }
 });
 
 // 监听主线程 恢复播放
 ipcRenderer.on('player-pause', () => {
     audio.pause();
-    sendEvent('pause');
+    sendEvent('pause', { status: playStatus(false) });
     console.log('[Player] Pause playback')
 });
 
@@ -76,16 +74,16 @@ function playMusic(code) {
             if (music == undefined) music = item.containers[0]
             console.log('[Player] Start playing: ' + item.name)
             index = playList.indexOf(code);
-            sendEvent('play', item);
+            sendEvent('play', { info: item, status: playStatus(true) });
             audio.src = music.path;
             audio.load();
-        } else sendEvent('restore', item);
+        } else sendEvent('restore', { info: item, status: playStatus(true) });
         audio.play();
     } else sendEvent('error')
 }
 
 function playNext() {
-    playMusic(playList[index == playList.length - 1 ? 0:index+1])
+    playMusic(playList[index == playList.length - 1 ? 0 : index + 1])
     console.log('[Player] Play next music')
 }
 
@@ -93,6 +91,16 @@ function playLast() {
     if (index == 0) return false;
     playMusic(playList[index - 1])
     console.log('[Player] Play last music')
+}
+
+function playStatus(force) {
+    return {
+        currentTime: audio.currentTime,
+        play: force == undefined ? !audio.paused : force,
+        muted: audio.muted,
+        volume: audio.volume,
+        playbackRate: audio.playbackRate
+    }
 }
 
 function sendEvent(action, data) {

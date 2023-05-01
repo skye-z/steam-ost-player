@@ -39,7 +39,7 @@
 </template>
   
 <script>
-import { run, getItem, player,getVersion } from '#preload';
+import { run, getItem, player, getVersion } from '#preload';
 import { Play48Filled, Pause48Filled, Next48Filled, Previous48Filled, ArrowRepeatAll24Filled, Speaker248Filled } from '@vicons/fluent'
 
 export default {
@@ -51,7 +51,7 @@ export default {
         tips: '更新资料库',
         timer: 0,
         playTime: 0,
-        playTimeText: '0:00',
+        playTimeText: '00:00',
         info: {
             name: '',
             game: '',
@@ -71,19 +71,19 @@ export default {
             console.log(action, data)
             switch (action) {
                 case 'play':
+                    this.playTime = 0;
+                    this.playTimeText = this.getDuration(0);
+                    this.startTime();
                     this.isPlay = true;
-                    if (data) this.updateInfo(data)
-                    else this.startTime();
-                    this.updateStatus();
+                    if (data.info) this.updateInfo(data.info);
                     break;
                 case 'restore':
-                    this.isPlay = true;
-                    this.startTime();
-                    this.updateStatus();
+                    // this.isPlay = true;
+                    this.updateStatus(data.status);
                     break;
                 case 'pause':
-                    this.isPlay = false;
-                    clearInterval(this.timer);
+                    // this.isPlay = false;
+                    this.updateStatus(data.status);
                     break;
                 case 'error':
                     this.isPlay = false;
@@ -101,11 +101,16 @@ export default {
                 artist: info.artist,
                 duration: info.duration
             }
-            this.loadMuiscData(info.code)
+            this.loadMuiscData(info.code);
+        },
+        updateStatus(status) {
+            this.isPlay = status.play;
+            this.playTime = parseFloat(status.currentTime).toFixed(0);
+            this.playTimeText = this.getDuration(this.playTime);
+            if (this.isPlay) this.startTime();
+            else clearInterval(this.timer);
         },
         loadMuiscData(code) {
-            this.playTime == 0;
-            this.playTimeText = '0:00';
             getItem(code).then(res => {
                 this.info = {
                     name: res.name,
@@ -161,16 +166,12 @@ export default {
         getDuration(num) {
             let m = '';
             if (num > 59) {
-                m = parseInt(num / 60).toFixed(0);
+                m = parseInt(num / 60).toFixed(0).toString().padStart(2, '0');
                 num = num - (parseInt(m) * 60);
             }
-            if (m == '') return '0:' + num;
+            num = num.toString().padStart(2, '0');
+            if (m == '') return '00:' + num;
             return m + ':' + num;
-        },
-        updateStatus() {
-            let status = player.getStatus();
-            this.playTime = parseFloat(status.currentTime).toFixed(0);
-            this.playTimeText = this.getDuration(this.playTime)
         },
         startTime() {
             clearInterval(this.timer);
@@ -178,6 +179,13 @@ export default {
                 this.playTime++;
                 this.playTimeText = this.getDuration(this.playTime)
             }, 1000);
+        },
+        clearTime() {
+            this.playTime == 0;
+            this.playTimeText = '00:00';
+            clearInterval(this.timer);
+            this.timer = 0;
+            this.startTime();
         }
     },
     mounted() {
@@ -199,6 +207,7 @@ export default {
 
 #player-cover {
     background: url(cover.svg) no-repeat;
+    -webkit-app-region: drag;
     background-color: #1b2230;
     background-size: 100% 100%;
     border-radius: 8px;
@@ -208,19 +217,24 @@ export default {
 
 #player-info {
     position: relative;
-    overflow: hidden;
     width: 250px;
     height: 68px;
 }
 
 #info-game {
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(42, 46, 51, 0.8);
+    -webkit-app-region: no-drag;
     border-radius: 15px;
     position: absolute;
     padding: 5px 10px;
     font-size: 12px;
-    top: -40px;
-    left: 5px;
+    color: #fff;
+    top: -38px;
+    left: 3px;
+}
+
+#info-game:hover{
+    background-color: #2a2e33;
 }
 
 #info-name {
@@ -330,7 +344,7 @@ export default {
     cursor: wait;
 }
 
-#version{
+#version {
     text-align: center;
     position: absolute;
     color: #707880;

@@ -68,7 +68,7 @@ export default {
         eventHandle(action, data) {
             switch (action) {
                 case 'play':
-                    this.playing = data.code;
+                    this.playing = data.info.code;
                     break;
                 default:
                     break;
