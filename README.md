@@ -1,7 +1,7 @@
 # Steam OST Player
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
-[![CodeQL](https://github.com/skay-zhang/steam-ost-player/workflows/CodeQL/badge.svg)](https://github.com/skay-zhang/steam-ost-player/security/code-scanning)
+[![CodeQL](https://github.com/skye-z/steam-ost-player/workflows/CodeQL/badge.svg)](https://github.com/skye-z/steam-ost-player/security/code-scanning)
 
 Steam 原声配乐(OST)播放器, 与 Steam 资源库无缝连接, 支持自动从 Steam 资源库读取 OST.
 
