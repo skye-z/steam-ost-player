@@ -5,7 +5,7 @@ on:
     # Inputs the workflow accepts.
     inputs:
       dry-run:
-        description: 'Compiles the app but not upload artifacts to distribution server'
+        description: '编译应用但不进行分发'
         default: false
         required: false
         type: boolean
